@@ -9,6 +9,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const db = require('./models')
+
 var app = express();
 
 // view engine setup
@@ -39,5 +41,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// DB authentication
+db.sequelize.authenticate()
+.then(() => {
+    console.log('Connection has been established successfully.');
+})
+.then(() => {
+    console.log('DB Sync complete.');
+    //return db.sequelize.sync();
+})
+.catch(err => {
+    console.error('Unable to connect to the database:', err);
+});
+
 
 module.exports = app;
